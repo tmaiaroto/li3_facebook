@@ -1,0 +1,7 @@
+This library will allow you to use the Facebook API with the PHP SDK.
+Somewhere in your bootstrap, add:
+
+Libraries::add('li3_facebook');
+
+In the library there is a bootstrap file. This file currently houses the code to connect. 
+It needs to change. However, for now there is a filter on Dispatcher::run() which will allow a user to login and then a local user record will be saved to the User model.
