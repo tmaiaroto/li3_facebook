@@ -183,7 +183,7 @@ class FacebookProxy extends \lithium\core\StaticObject {
 
 			//@todo: insert callable existance check here!
 			if(!\is_callable(array($self::$_facebookApiInstance,$method))){
-				throw new Exception("Method `$method` is not callable");
+				throw new Exception(__CLASS__." Method `$method` is not callable");
 			}
 
 			switch (count($params)) {
