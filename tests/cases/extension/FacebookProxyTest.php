@@ -28,9 +28,9 @@ class FacebookProxyTest extends \lithium\test\Unit {
 	
 	//test configuration
 	public function testConfig(){
+		$oldConfig = Libraries::get('li3_facebook');
 		
-		$oldConfig = Libraries::get('li3_faceboook');
-		Libraries::remove('li3_faceboook');
+		Libraries::remove('li3_facebook');
 		Libraries::add('li3_facebook');
 		
 		FacebookProxy::$_autoConfigure = false;		
@@ -64,7 +64,8 @@ class FacebookProxyTest extends \lithium\test\Unit {
 		$result = FacebookProxy::config($this->_mockDefaults);
 		$this->assertTrue($result,'config should return true');
 		$this->assertIdentical(FacebookProxy::config(),$this->_mockDefaults,'config should not be empty');
-		
+
+
 		//FaceBookProxy::foo();
 		//die(print_r(array($result,FacebookProxy::config()),true));
 		
