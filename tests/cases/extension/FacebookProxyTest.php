@@ -170,6 +170,7 @@ class FacebookProxyTest extends \lithium\test\Unit {
 	
 	
 	public function testProxying(){
+		//$this->skipIf(True);
 		//$this->assertFalse(FacebookProxy::__init());
 		$fb = new FacebookProxy();
 		$fb::$_validateConfiguration = false;

@@ -169,35 +169,41 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	 * 
 	 * @param string $mehtod
 	 * @param mixed $arguments
-	 * @return mixed 
+	 * @return mixed
+	 * @filter this Method is filterable
 	 */
 	public static function run($method, $params = array()) {
-		if(!static::$_facebookApiInstance){
-			static::instanciateFacebookApi();
-		}
-		
-		//@todo: insert callable existance check here!
-		if(!\is_callable(array(static::$_facebookApiInstance,$method))){
-			throw new Exception("Method `$method` is not callable");
-		}
-		
-		switch (count($params)) {
-			case 0:
-				return static::$_facebookApiInstance->$method();
-			case 1:
-				return static::$_facebookApiInstance->$method($params[0]);
-			case 2:
-				return static::$_facebookApiInstance->$method($params[0], $params[1]);
-			case 3:
-				return static::$_facebookApiInstance->$method($params[0], $params[1], $params[2]);
-			case 4:
-				return static::$_facebookApiInstance->$method($params[0], $params[1], $params[2], $params[3]);
-			case 5:
-				return static::$_facebookApiInstance->$method($params[0], $params[1], $params[2], $params[3], $params[4]);
-			default:
-				//i am not sure if this is a good idea
-				return call_user_func_array(array(get_called_class(), $method), $params);
-		}
+		$params = compact('method', 'params');
+		return static::_filter(__FUNCTION__, $params, function($self, $params) {
+			extract($params);
+
+			if(!$self::$_facebookApiInstance){
+				$self::invokeMethod('instanciateFacebookApi');
+			}
+
+			//@todo: insert callable existance check here!
+			if(!\is_callable(array($self::$_facebookApiInstance,$method))){
+				throw new Exception("Method `$method` is not callable");
+			}
+
+			switch (count($params)) {
+				case 0:
+					return $self::$_facebookApiInstance->$method();
+				case 1:
+					return $self::$_facebookApiInstance->$method($params[0]);
+				case 2:
+					return $self::$_facebookApiInstance->$method($params[0], $params[1]);
+				case 3:
+					return $self::$_facebookApiInstance->$method($params[0], $params[1], $params[2]);
+				case 4:
+					return $self::$_facebookApiInstance->$method($params[0], $params[1], $params[2], $params[3]);
+				case 5:
+					return $self::$_facebookApiInstance->$method($params[0], $params[1], $params[2], $params[3], $params[4]);
+				default:
+					//i am not sure if this is a good idea
+					return call_user_func_array(array(get_called_class(), $method), $params);
+			}
+		});
 	}
 	
 	/**
@@ -206,23 +212,29 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	 * 
 	 * @param array $config 
 	 * @return Facebook $apiInstance
+	 * @filter This method may be filtered.
 	 */
 	public static function instanciateFacebookApi($config = array()){
-			if(static::$_validateConfiguration){
-				static::checkConfiguration($config);
+		$params = compact('config');
+		return static::_filter(__FUNCTION__, $params, function($self, $params) {
+			extract($params);
+
+			if($self::$_validateConfiguration){
+				$self::invokeMethod('checkConfiguration',$config);
 			}
 			if($config){
-				static::config($config);
+				$self::config($config);
 			}
-			static::_checkApiAvailability();
-			static::_requireFacebookApi();
-			static::_checkApiCompatibility();
-			$apiInstance = new \Facebook(static::config());
+			$self::invokeMethod('_checkApiAvailability');
+			$self::invokeMethod('_requireFacebookApi');
+			$self::invokeMethod('_checkApiCompatibility');
+			$apiInstance = new \Facebook($self::config());
 			if(!$apiInstance){
-				throw Exception('Facebook Api cant instanciated!');
+				throw new Exception('Facebook Api cant instanciated!');
 			}
-			static::$_facebookApiInstance = $apiInstance;
+			$self::$_facebookApiInstance = $apiInstance;
 			return $apiInstance;
+		});
 	}
 	
 	/**
@@ -234,27 +246,33 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	 * 
 	 * @param array $config
 	 * @return boolean
+	 * @filter This method may be filtered.
 	 */
 	public static function checkConfiguration($config = array()){
-		if(!$config){
-			$config = static::config();
-		}
-		if(empty($config['appId'])){
-			throw new Exception('Configuration: `appId` should be set');
-		}
-		if(empty($config['secret'])){
-			throw new Exception('Configuration: `secret` should be set');
-		}
-		if(!empty($config['cookie'])){
-			throw new Exception('Configuration: `cookie` not yet supported');
-		}
-		if(!empty($config['domain'])){
-			throw new Exception('Configuration: `domain` not yet supported');
-		}
-		if(!empty($config['fileUpload'])){
-			throw new Exception('Configuration: `fileUpload` not yet supported');
-		}
-		return true;
+		$params = compact('config');
+		return static::_filter(__FUNCTION__, $params, function($self, $params) {
+			extract($params);
+
+			if(!$config){
+			$config = $self::invokeMethod('config');
+			}
+			if(empty($config['appId'])){
+				throw new Exception('Configuration: `appId` should be set');
+			}
+			if(empty($config['secret'])){
+				throw new Exception('Configuration: `secret` should be set');
+			}
+			if(!empty($config['cookie'])){
+				throw new Exception('Configuration: `cookie` not yet supported');
+			}
+			if(!empty($config['domain'])){
+				throw new Exception('Configuration: `domain` not yet supported');
+			}
+			if(!empty($config['fileUpload'])){
+				throw new Exception('Configuration: `fileUpload` not yet supported');
+			}
+			return true;
+		});
 	}
 	
 	/**
@@ -263,18 +281,24 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	protected static function _checkApiAvailability(){
 		$fbLib = static::_getApiPath();
 		if(!\file_exists($fbLib)){
-		 throw new ClassNotFoundException('Facebook Lib not there! Do git submoule init first!');
+			throw new ClassNotFoundException('Facebook Lib not there! Do git submoule init first!');
 		}
 	}
 	
 	/**
 	 * constructs the Api Path by this file
-	 * @return string full Path to the FacebookApi 
+	 * @return string full Path to the FacebookApi
+	 * @filter This method may be filtered.
 	 */
 	protected static function _getApiPath(){
-		$currentPath = dirname(__FILE__);
-		$fbLib = $currentPath.'/../libraries/facebook-sdk/src/facebook.php';
-		return \realpath($fbLib);
+		$params = array();
+		return static::_filter(__FUNCTION__, $params, function($self, $params) {
+			extract($params);
+
+			$currentPath = dirname(__FILE__);
+			$fbLib = $currentPath.'/../libraries/facebook-sdk/src/facebook.php';
+			return \realpath($fbLib);
+		});
 	}
 	
 	/**
@@ -306,11 +330,4 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	}
 }
 
-	FacebookProxy::applyFilter('run',$fo = function($self, $params, $chain) {
-			// Custom pre-dispatch logic goes here
-			die("awesome");
-			$response = $chain->next($self, $params, $chain);
-			return $response;
-			
-		});
 ?>
