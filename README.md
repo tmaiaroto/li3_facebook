@@ -20,7 +20,7 @@ So : Please don't forget to do a git submodule init!
 You will need a Facebook API-Key and the Lithium Framework.
 Integrate the Library in the bootstrap process of your lovely li3 App:
 
-Libraries::add('li3_facebook' => array(
+Libraries::add('li3_facebook', array(
 	'appId' => key
 	'secret' => yourSuperSecretKey
 ));
