@@ -1,8 +1,8 @@
 <?php
 
-namespace li3_facebook\tests\cases\extension;
+namespace li3_facebook\tests\cases\extensions;
 
-use li3_facebook\extension\FacebookProxy;
+use li3_facebook\extensions\FacebookProxy;
 use lithium\core\Libraries;
 
 use Exception;

@@ -1,6 +1,6 @@
 <?php
 
-namespace li3_facebook\extension;
+namespace li3_facebook\extensions;
 
 use lithium\core\Libraries;
 //use lithium\core\Environment;
