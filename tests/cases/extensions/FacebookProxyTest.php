@@ -185,7 +185,7 @@ class FacebookProxyTest extends \lithium\test\Unit {
 		$this->assertIdentical($expected['appId'], $fb::run('getAppId'));
 		$this->assertIdentical($expected['secret'], $fb::run('getApiSecret'));
 
-		$expectedMessage = 'li3_facebook\extension\FacebookProxy Method ' .
+		$expectedMessage = 'li3_facebook\extensions\FacebookProxy Method ' .
 			'`unknownApiCall` is not callable';
 		$this->expectException($expectedMessage);
 		$this->assert($fb::run('unknownApiCall'));
