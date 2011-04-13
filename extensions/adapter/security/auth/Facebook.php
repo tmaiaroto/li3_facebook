@@ -28,11 +28,13 @@ class Facebook extends \lithium\core\Object {
 	 * Called by the `Auth` class to run an authentication check against the Facebook API
 	 * and returns an array of user information on success, or `false` on failure.
 	 *
-	 * @param string $name The name of the `Auth` configuration/adapter to check against.
+	 * @param object $credentials A data container which wraps the authentication credentials used
+	 *               to query the model (usually a `Request` object). See the documentation for this
+	 *               class for further details.
 	 * @param array $options Options which include the options for session key names and also FB API method options.
 	 * @return array Returns an array containing user information on success, or `false` on failure.
 	 */
-	public function check($name=null, array $options = array()) {
+	public function check($credentials, array $options = array()) {
 		$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
 		$default_logout_url = $protocol . $_SERVER['HTTP_HOST'] . '/';
 		$facebook_config = Libraries::get('li3_facebook');
