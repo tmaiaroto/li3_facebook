@@ -7,6 +7,7 @@ use lithium\core\Libraries;
 
 use Exception;
 use lithium\core\ClassNotFoundException;
+use lithium\core\ConfigException;
 
 /**
 * The `FacebookProxy` class handles all Facebook related functionalities.
@@ -256,19 +257,19 @@ class FacebookProxy extends \lithium\core\StaticObject {
 			$config = $self::invokeMethod('config');
 			}
 			if (empty($config['appId'])){
-				throw new Exception('Configuration: `appId` should be set');
+				throw new ConfigException('Configuration: `appId` should be set');
 			}
 			if (empty($config['secret'])){
-				throw new Exception('Configuration: `secret` should be set');
+				throw new ConfigException('Configuration: `secret` should be set');
 			}
 			if (!empty($config['cookie'])){
-				throw new Exception('Configuration: `cookie` not yet supported');
+				throw new ConfigException('Configuration: `cookie` not yet supported');
 			}
 			if (!empty($config['domain'])){
-				throw new Exception('Configuration: `domain` not yet supported');
+				throw new ConfigException('Configuration: `domain` not yet supported');
 			}
 			if (!empty($config['fileUpload'])){
-				throw new Exception('Configuration: `fileUpload` not yet supported');
+				throw new ConfigException('Configuration: `fileUpload` not yet supported');
 			}
 			return true;
 		});
