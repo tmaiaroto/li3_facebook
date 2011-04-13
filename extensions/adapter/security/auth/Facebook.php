@@ -12,7 +12,6 @@ use li3_facebook\extensions\FacebookProxy;
 use lithium\security\Auth;
 use lithium\storage\Session;
 use lithium\core\Libraries;
-use lithium\core\ConfigException;
 use \Exception;
 
 /**
@@ -20,6 +19,7 @@ use \Exception;
  * and use that to set auth if available.
  *
  * @see lithium\security\Auth
+ * @see li3_facebook\extensions\FacebookProxy
 */
 
 class Facebook extends \lithium\core\Object {
@@ -27,16 +27,25 @@ class Facebook extends \lithium\core\Object {
 	/**
 	 * Called by the `Auth` class to run an authentication check against the Facebook API
 	 * and returns an array of user information on success, or `false` on failure.
+	 * 
+	 * @todo move the FacebookConfig::checkConfiguration part into the __init?
+	 * 
+	 * @throws lithium\core\ConfigException if the facebook App credentials arent set
 	 *
-	 * @param object $credentials A data container which wraps the authentication credentials used
+	 * @param object $credentals A data container which wraps the authentication credentials used
 	 *               to query the model (usually a `Request` object). See the documentation for this
 	 *               class for further details.
 	 * @param array $options Options which include the options for session key names and also FB API method options.
 	 * @return array Returns an array containing user information on success, or `false` on failure.
 	 */
 	public function check($credentials, array $options = array()) {
-		$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
-		$default_logout_url = $protocol . $_SERVER['HTTP_HOST'] . '/';
+		FacebookProxy::checkConfiguration();
+		
+		//get Url
+		$base  = $credentials->env('HTTPS') ? 'https://' : 'http://';
+		$base .= $credentials->env('HTTP_HOST');
+		$base .= $credentials->env('base');
+		
 		$facebook_config = Libraries::get('li3_facebook');
 		// get the options from the li3_facebook library configuration if set there
 		$options += $facebook_config;
@@ -44,7 +53,7 @@ class Facebook extends \lithium\core\Object {
 		// otherwise, set some defaults
 		$defaults = array(
 			'logout_url_options' => array(
-				'next' => $default_logout_url
+				'next' => $base
 			),
 			'login_url_options' => array(
 			),
@@ -55,43 +64,39 @@ class Facebook extends \lithium\core\Object {
 		$options += $defaults;
 		
 		$user_data = false;
-		if($facebook_config) {
-			$session = FacebookProxy::getSession();
-			$uid = null;
-			// Session based API call.
-			if ($session) {
-				// Set the session locally
-				Session::write($options['local_fb_session_name'], $session);
-				try {
-					$uid = FacebookProxy::getUser();
-				} catch (Exception $e) {
-					//error_log($e);
-				}
+		
+		$session = FacebookProxy::getSession();
+		$uid = null;
+		// Session based API call.
+		if ($session) {
+			// Set the session locally
+			Session::write($options['local_fb_session_name'], $session);
+			try {
+				$uid = FacebookProxy::getUser();
+			} catch (Exception $e) {
+				//error_log($e);
 			}
-			
-			// If $uid is set, then write the fb_logout_url session key
-			if (!empty($uid)) {
-				if($options['logout_url_session_key']) {
-					Session::write($options['logout_url_session_key'], FacebookProxy::getLogoutUrl($options['logout_url_options']));
-				}
-				
-				// Get the user data to return
-				$user_data = array();
-				try {
-					$user_data = FacebookProxy::api('/me');
-				} catch(Exception $e) {
-					//error_log($e);
-				}
-				
-			} else {
-				// Else, the user hasn't logged in yet, write the fb_login_url session key
-				if($options['login_url_session_key']) {
-					Session::write($options['login_url_session_key'], FacebookProxy::getLoginUrl($options['login_url_options']));
-				}
+		}
+
+		// If $uid is set, then write the fb_logout_url session key
+		if (!empty($uid)) {
+			if($options['logout_url_session_key']) {
+				Session::write($options['logout_url_session_key'], FacebookProxy::getLogoutUrl($options['logout_url_options']));
 			}
-			
+
+			// Get the user data to return
+			$user_data = array();
+			try {
+				$user_data = FacebookProxy::api('/me');
+			} catch(Exception $e) {
+				//error_log($e);
+			}
+
 		} else {
-			throw new ConfigException("Facebook configuration has not been defined.");
+			// Else, the user hasn't logged in yet, write the fb_login_url session key
+			if($options['login_url_session_key']) {
+				Session::write($options['login_url_session_key'], FacebookProxy::getLoginUrl($options['login_url_options']));
+			}
 		}
 		
 		return $user_data;
