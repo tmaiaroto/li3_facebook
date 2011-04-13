@@ -66,7 +66,9 @@ class FacebookProxyTest extends \lithium\test\Unit {
 		$this->assertIdentical(
 			FacebookProxy::config(),$this->_mockDefaults,'config should not be empty'
 		);
-
+		
+		Libraries::remove('li3_facebook');
+		Libraries::add('li3_facebook',$oldConfig);
 		//FaceBookProxy::foo();
 		//die(print_r(array($result,FacebookProxy::config()),true));
 	}
