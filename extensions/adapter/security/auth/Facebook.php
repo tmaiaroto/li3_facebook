@@ -61,6 +61,28 @@ class Facebook extends \lithium\core\Object {
 			'login_url_session_key' => 'fb_login_url',
 			'local_fb_session_name' => 'fb_session'
 		);
+		
+		/**
+		 * If the adapter config() has those keys set, then use those as the default values.
+		 * This allows various adapters to be created all which can change the options for logging in and out
+		 * for Facebook, so when Auth::check() is called, each check can be used for different reasons.
+		 * If the options are set with the Facebook library ($facebook_config) then there can only be one
+		 * "configuration" for these login and logout parameters.
+		 *
+		 * So for example, Auth::check('popup', $this->request); or Auth::check('page', $this->request);
+		 * The difference maybe between the two Auth configurations is the "login_url_options" array values
+		 * of "display" being "page" or "popup" which tells the FB API how to display the login.
+		 *
+		 * We could also pass these options in the configuration under Libraries::add('li3_facebook'), but then
+		 * it wouldn't be quite as easy to switch behaviors while using Auth::check();
+		*/
+		$defaults['logout_url_options'] = (isset($this->_config['logout_url_options'])) ? $this->_config['logout_url_options']:$defaults['logout_url_options'];
+		$defaults['login_url_options'] = (isset($this->_config['login_url_options'])) ? $this->_config['login_url_options']:$defaults['login_url_options'];
+		$defaults['logout_url_session_key'] = (isset($this->_config['logout_url_session_key'])) ? $this->_config['logout_url_session_key']:$defaults['logout_url_session_key'];
+		$defaults['login_url_session_key'] = (isset($this->_config['login_url_session_key'])) ? $this->_config['login_url_session_key']:$defaults['login_url_session_key'];
+		$defaults['local_fb_session_name'] = (isset($this->_config['local_fb_session_name'])) ? $this->_config['local_fb_session_name']:$defaults['local_fb_session_name'];
+		
+		// combine the defults with the options passed, giving those passed options the priority
 		$options += $defaults;
 		
 		$user_data = false;
