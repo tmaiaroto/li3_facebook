@@ -32,7 +32,7 @@ class Facebook extends \lithium\core\Object {
 	 * 
 	 * @throws lithium\core\ConfigException if the facebook App credentials arent set
 	 *
-	 * @param object $credentals A data container which wraps the authentication credentials used
+	 * @param object $credentials A data container which wraps the authentication credentials used
 	 *               to query the model (usually a `Request` object). See the documentation for this
 	 *               class for further details.
 	 * @param array $options Options which include the options for session key names and also FB API method options.
