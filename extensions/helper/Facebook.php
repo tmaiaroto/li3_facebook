@@ -106,6 +106,8 @@ class Facebook extends \lithium\template\helper\Html {
 		extract($options);
 
 		$href = urlencode($href);
+		$frame_style = array_map(function($key, $value){ return "{$key}: {$value}";},
+			array_keys($frame_style), array_values($frame_style));
 		$frame_style = implode('; ', $frame_style);
 
 		$frame_url = 'http://www.facebook.com/plugins/like.php';
