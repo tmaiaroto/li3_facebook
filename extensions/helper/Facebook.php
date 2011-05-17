@@ -32,7 +32,7 @@ class Facebook extends \lithium\template\helper\Html {
 	 * @param $options Array
 	 * @return String
 	*/
-	public function facebook_login(array $options = array()) {
+	public function login(array $options = array()) {
 		$defaults = array(
 			'div' => 'fb_login',
 			'button_image' => '/li3_facebook/img/fb-login-button.png',
@@ -78,7 +78,7 @@ class Facebook extends \lithium\template\helper\Html {
 	 * @param $debug Boolean Whether or not to use the debug version
 	 * @return String The HTML embed code
 	*/
-	public function facebook_init($async=true, $debug=false) {
+	public function init($async=true, $debug=false) {
 		$script = 'all.js';
 		if($debug === true) {
 			$script = 'core.debug.js';
@@ -93,6 +93,27 @@ class Facebook extends \lithium\template\helper\Html {
 		}
 		return $output;
 	}
-    
+
+	public function like(array $options = array(), $async = true, $debug=false){
+		$request = $this->_context->request();
+		$options += array('href' => $this->_context->url(null, array('absolute'=>true)), 'send' => false,
+			'layout' => 'standard', 'width' => 450, 'height' => 80, 'faces' => 'true', 
+			'colorscheme' => 'light', 'frame_style' => array(
+				'border' => 'none', 'overflow' => 'hidden', 'width' => '450px', 'height' => '80px'
+			),
+		);
+
+		extract($options);
+
+		$href = urlencode($href);
+		$frame_style = implode('; ', $frame_style);
+
+		$frame_url = 'http://www.facebook.com/plugins/like.php';
+		$frame_url .= "?app_id=110278672393637&amp;href={$href}&amp;send={$send}";
+		$frame_url .= "&amp;layout={$layout}&amp;width={$width}&amp;show_faces={$faces}";
+		$frame_url .= "&amp;action=like&amp;colorscheme={$colorscheme}&amp;font&amp;height={$height}";
+		return "<iframe src=\"{$frame_url}\" scrolling=\"no\" frameborder=\"0\" style=\"{$frame_style}\" allowTransparency=\"true\"></iframe>";
+	}
+	
 }
 ?>
