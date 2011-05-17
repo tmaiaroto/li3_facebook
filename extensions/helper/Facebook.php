@@ -100,7 +100,7 @@ class Facebook extends \lithium\template\helper\Html {
 			'layout' => 'standard', 'width' => 450, 'height' => 80, 'faces' => 'true', 
 			'colorscheme' => 'light', 'frame_style' => array(
 				'border' => 'none', 'overflow' => 'hidden', 'width' => '450px', 'height' => '80px'
-			),
+			)
 		);
 
 		extract($options);
