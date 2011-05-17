@@ -109,7 +109,7 @@ class Facebook extends \lithium\template\helper\Html {
 		$frame_style = implode('; ', $frame_style);
 
 		$frame_url = 'http://www.facebook.com/plugins/like.php';
-		$frame_url .= "?app_id=110278672393637&amp;href={$href}&amp;send={$send}";
+		$frame_url .= "?app_id={$this->facebook_app_id}&amp;href={$href}&amp;send={$send}";
 		$frame_url .= "&amp;layout={$layout}&amp;width={$width}&amp;show_faces={$faces}";
 		$frame_url .= "&amp;action=like&amp;colorscheme={$colorscheme}&amp;font&amp;height={$height}";
 		return "<iframe src=\"{$frame_url}\" scrolling=\"no\" frameborder=\"0\" style=\"{$frame_style}\" allowTransparency=\"true\"></iframe>";
