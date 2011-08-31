@@ -52,15 +52,12 @@ class Facebook extends \lithium\core\Object {
 		
 		// otherwise, set some defaults
 		$defaults = array(
-			'logout_url_options' => array(
-				'next' => $base
-			),
-			'login_url_options' => array(
-			),
+			'logout_url_options' => array('next' => $base),
+			'login_url_options' => array(),
 			'logout_url_session_key' => 'fb_logout_url',
 			'login_url_session_key' => 'fb_login_url',
 			'local_fb_session_name' => 'fb_session'
-		);
+		) ;
 		
 		/**
 		 * If the adapter config() has those keys set, then use those as the default values.
@@ -76,11 +73,11 @@ class Facebook extends \lithium\core\Object {
 		 * We could also pass these options in the configuration under Libraries::add('li3_facebook'), but then
 		 * it wouldn't be quite as easy to switch behaviors while using Auth::check();
 		*/
-		$defaults['logout_url_options'] = (isset($this->_config['logout_url_options'])) ? $this->_config['logout_url_options']:$defaults['logout_url_options'];
-		$defaults['login_url_options'] = (isset($this->_config['login_url_options'])) ? $this->_config['login_url_options']:$defaults['login_url_options'];
-		$defaults['logout_url_session_key'] = (isset($this->_config['logout_url_session_key'])) ? $this->_config['logout_url_session_key']:$defaults['logout_url_session_key'];
-		$defaults['login_url_session_key'] = (isset($this->_config['login_url_session_key'])) ? $this->_config['login_url_session_key']:$defaults['login_url_session_key'];
-		$defaults['local_fb_session_name'] = (isset($this->_config['local_fb_session_name'])) ? $this->_config['local_fb_session_name']:$defaults['local_fb_session_name'];
+		foreach($defaults as $key => $value) {
+			 if (isset($this->_config[$key])) {
+				$defaults[$key] = $this->_config[$key];
+			}
+		}
 		
 		// combine the defults with the options passed, giving those passed options the priority
 		$options += $defaults;
@@ -103,7 +100,10 @@ class Facebook extends \lithium\core\Object {
 		// If $uid is set, then write the fb_logout_url session key
 		if (!empty($uid)) {
 			if($options['logout_url_session_key']) {
-				Session::write($options['logout_url_session_key'], FacebookProxy::getLogoutUrl($options['logout_url_options']));
+				Session::write(
+					$options['logout_url_session_key'],
+					FacebookProxy::getLogoutUrl($options['logout_url_options'])
+				);
 			}
 
 			// Get the user data to return
@@ -117,7 +117,10 @@ class Facebook extends \lithium\core\Object {
 		} else {
 			// Else, the user hasn't logged in yet, write the fb_login_url session key
 			if($options['login_url_session_key']) {
-				Session::write($options['login_url_session_key'], FacebookProxy::getLoginUrl($options['login_url_options']));
+				Session::write(
+					$options['login_url_session_key'], 
+					FacebookProxy::getLoginUrl($options['login_url_options'])
+				);
 			}
 		}
 		

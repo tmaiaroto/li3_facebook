@@ -1,0 +1,1 @@
+<fb:login-button perms="email" redirect-uri="/login">Login with Facebook</fb:login-button>

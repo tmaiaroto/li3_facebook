@@ -11,18 +11,18 @@ use lithium\core\Libraries;
 
 class Facebook extends \lithium\template\helper\Html {
     
-    public function _init() {
-        parent::_init();
-        
-        // Get some required values
-        $facebook_config = Libraries::get('li3_facebook');
-        if(!empty($facebook_config)) {
-            extract($facebook_config);
-        }
-        
-        $this->facebook_app_id = (isset($appId)) ? $appId:false;
-        $this->facebook_locale = (isset($locale)) ? $locale:'en_US';
-    }
+		public function _init() {
+			parent::_init();
+
+			// Get some required values
+			$facebook_config = Libraries::get('li3_facebook');
+			if(!empty($facebook_config)) {
+				extract($facebook_config);
+			}
+
+			$this->facebook_app_id = (isset($appId)) ? $appId : false;
+			$this->facebook_locale = (isset($locale)) ? $locale : 'en_US';
+		}
     
     /**
 	 * Displays a basic Facebook Connect login button.
@@ -38,25 +38,21 @@ class Facebook extends \lithium\template\helper\Html {
 			'button_image' => '/li3_facebook/img/fb-login-button.png',
 			'button_alt' => 'Login with Facebook',
 			'additional_copy' => null,
-            'fb_login_url_session_key' => 'fb_login_url'
+			'fb_login_url_session_key' => 'fb_login_url'
 		);
 		$options += $defaults;
-		$output = '';
 		
 		$fb_login_url = Session::read($options['fb_login_url_session_key']);
 		if(!empty($fb_login_url)) {
-			if($options['div'] !== false) {
-				$output .= '<div id="' . $options['div'] . '">' . $options['additional_copy'];
-			}
-			
-			$output .= '<a href="' . $fb_login_url . '"><img src="' . $options['button_image'] . '" alt="' . $options['button_alt'] .'" /></a>';
-			
-			if($options['div'] !== false) {
-				$output .= '</div>';
-			}
+			$view = $this->_context->view();
+			return $view->render(
+				array('element'=>'login'), 
+				compact('options', 'fb_login_url'),
+				array('library' => 'li3_facebook')
+			);
 		}
 		
-		return $output;
+		return null;
 	}
     
     /**
@@ -83,15 +79,18 @@ class Facebook extends \lithium\template\helper\Html {
 		if($debug === true) {
 			$script = 'core.debug.js';
 		}
-		$output = '';
-		if($this->facebook_app_id) {
-			if($async) {
-				$output = "<div id=\"fb-root\"></div><script>window.fbAsyncInit = function() { FB.init({appId: '".$this->facebook_app_id."', status: true, cookie: true, xfbml: true}); }; (function() { var e = document.createElement('script'); e.async = true; e.src = document.location.protocol + '//connect.facebook.net/".$this->facebook_locale."/".$script."'; document.getElementById('fb-root').appendChild(e); }());</script>";
-			} else {
-				$output = "<div id=\"fb-root\"></div><script src=\"http://connect.facebook.net/".$this->facebook_locale."/".$fb_script."\"></script><script>FB.init({ appId  : '".$this->facebook_app_id."', status : true, cookie : true, xfbml : true });</script>";
-			}
+		$appId = $this->facebook_app_id;
+		$locale = $this->facebook_locale;
+		if($appId) {
+			
+			$view = $this->_context->view();
+			return$view->render(
+				array('element'=>'init'), 
+				compact('appId', 'locale', 'script', 'async'),
+				array('library' => 'li3_facebook')
+			);
 		}
-		return $output;
+		return null;
 	}
     
 }
