@@ -57,7 +57,7 @@ class Facebook extends \lithium\core\Object {
 			'logout_url_session_key' => 'fb_logout_url',
 			'login_url_session_key' => 'fb_login_url',
 			'local_fb_session_name' => 'fb_session'
-		) ;
+		);
 		
 		/**
 		 * If the adapter config() has those keys set, then use those as the default values.
@@ -84,17 +84,11 @@ class Facebook extends \lithium\core\Object {
 		
 		$user_data = false;
 		
-		$session = FacebookProxy::getSession();
 		$uid = null;
-		// Session based API call.
-		if ($session) {
-			// Set the session locally
-			Session::write($options['local_fb_session_name'], $session);
-			try {
+		try {
 				$uid = FacebookProxy::getUser();
-			} catch (Exception $e) {
+		} catch (Exception $e) {
 				//error_log($e);
-			}
 		}
 
 		// If $uid is set, then write the fb_logout_url session key
