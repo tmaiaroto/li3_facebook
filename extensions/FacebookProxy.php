@@ -28,7 +28,7 @@ class FacebookProxy extends \lithium\core\StaticObject {
 	protected static $_defaults = array(
 		'appId' => '',
 		'secret' => '',
-		'cookie' => false,
+		'cookie' => true,
 		'domain' => false,
 		'fileUpload' => false
 	);
@@ -229,9 +229,6 @@ class FacebookProxy extends \lithium\core\StaticObject {
 			}
 			if (empty($config['secret'])){
 				throw new ConfigException('Configuration: `secret` should be set');
-			}
-			if (!empty($config['cookie'])){
-				throw new ConfigException('Configuration: `cookie` not yet supported');
 			}
 			if (!empty($config['domain'])){
 				throw new ConfigException('Configuration: `domain` not yet supported');

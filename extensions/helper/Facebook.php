@@ -10,6 +10,7 @@ use lithium\storage\Session;
 use lithium\core\Libraries;
 use li3_facebook\extensions\FacebookProxy;
 use lithium\core\Environment;
+use lithium\security\Auth;
 
 class Facebook extends \lithium\template\helper\Html {
 
@@ -222,14 +223,16 @@ class Facebook extends \lithium\template\helper\Html {
 	);
 
 	protected $_locale;
+	
+	protected $_config = array(); 
     
 	public function _init() {
 		parent::_init();
 
 		// Get some required values
-		$facebook_config = Libraries::get('li3_facebook');
-		if(!empty($facebook_config)) {
-			extract($facebook_config);
+		$this->_config = Libraries::get('li3_facebook');
+		if(!empty($this->_config)) {
+			extract($this->_config);
 		}
 
 		$this->_appId = (isset($appId)) ? $appId : false;
@@ -256,13 +259,16 @@ class Facebook extends \lithium\template\helper\Html {
 	*/
 	public function login(array $options = array()) {
 		$view = $this->_context->view();
-		$user = FacebookProxy::getUser();
 		$loginUrl = false;
-		if (!$user) {
-			$loginUrl = FacebookProxy::getLoginUrl();
+		$params = array(
+		  'scope' => 'email',
+		  'redirect_uri' => 'http://local.soundaymusic.com/en/login',
+		);
+		if (!Auth::check('sounday')) {
+			$loginUrl = FacebookProxy::getLoginUrl($params);
 		}
 		else {
-			$logoutUrl = FacebookProxy::getLogoutUrl();
+			$logoutUrl = FacebookProxy::getLogoutUrl(array('next' => 'http://local.soundaymusic.com/en/logout'));
 		}
 		return $view->render(
 			array('element'=>'login'), 
