@@ -13,13 +13,6 @@
 	    xfbml: true,
 	    oauth: true
 	  });
-	  FB.Event.subscribe('auth.login', function(response) {
-	    window.location.href = '/<?=$this->request()->locale?>/login';
-	  });
-	
-	  FB.Event.subscribe('auth.logout', function(response) {
-	    window.location.href = '/<?=$this->request()->locale?>/logout';
-	  }); 
 	};
 	(function() {
 	  var e = document.createElement('script'); e.async = true;

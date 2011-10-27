@@ -10,6 +10,7 @@ use lithium\storage\Session;
 use lithium\core\Libraries;
 use li3_facebook\extensions\FacebookProxy;
 use lithium\core\Environment;
+use lithium\net\http\Router;
 
 class Facebook extends \lithium\template\helper\Html {
 
@@ -258,11 +259,15 @@ class Facebook extends \lithium\template\helper\Html {
 		$view = $this->_context->view();
 		$user = FacebookProxy::getUser();
 		$loginUrl = false;
+		$domain = $this->_context->request();
 		if (!$user) {
-			$loginUrl = FacebookProxy::getLoginUrl();
+			$loginUrl = FacebookProxy::getLoginUrl(array(
+				'scope' => 'email',
+				'redirect_uri' => 'http://local.soundaymusic.com/en/login'
+			));
 		}
 		else {
-			$logoutUrl = FacebookProxy::getLogoutUrl();
+			$logoutUrl = FacebookProxy::getLogoutUrl(array('next' => 'http://local.soundaymusic.com/en/logout' ));
 		}
 		return $view->render(
 			array('element'=>'login'), 
