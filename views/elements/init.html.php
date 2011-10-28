@@ -7,29 +7,12 @@
 <?php else: ?>
 <script>
 	window.fbAsyncInit = function() {
-<<<<<<< HEAD
-		FB.init({
-			appId: '<?=$appId?>',
-			cookie: true,
-			xfbml: true,
-			oauth: true,
-			status : true
-		});
-		FB.Event.subscribe('auth.login', function(response) {
-			window.location.href = '/<?=$this->request()->locale?>/login';
-		});
-
-		FB.Event.subscribe('auth.logout', function(response) {
-			window.location.href = '/<?=$this->request()->locale?>/logout';
-		}); 
-=======
 	  FB.init({
 	    appId: '<?=$appId?>',
 	    cookie: true,
 	    xfbml: true,
 	    oauth: true
 	  });
->>>>>>> dev
 	};
 	(function() {
 	  var e = document.createElement('script'); e.async = true;
