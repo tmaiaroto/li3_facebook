@@ -1,0 +1,26 @@
+{
+    "name": "servicerunner/li3_facebook",
+    "type": "lithium-library",
+    "description": "Lithium Library for the Facebook API",
+    "keywords": ["facebook", "api", "li3", "lithium"],
+    "homepage": "https://github.com/ServiceRunner/li3_facebook",
+    "authors": [
+        {
+            "name": "Tom Maiaroto",
+            "homepage": "https://github.com/tmaiaroto"
+        },
+        {
+            "name": "Marc Schwering",
+            "homepage": "https://github.com/m4rcsch"
+        },
+        {
+            "name": "Chris Jones",
+            "email": "leeked@gmail.com",
+            "homepage": "https://github.com/leek"
+        }
+    ],
+    "require": {
+        "composer/installers": "*",
+        "facebook/php-sdk": "dev-master"
+    }
+}

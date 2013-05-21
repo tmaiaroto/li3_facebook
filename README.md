@@ -1,34 +1,33 @@
----
-title: li3_facebook : a Lithium Facebook Library Wrapper
-subtitle: Integration Facebook into your Lithium Framework
-author: weluse GmbH : Marc Schwering
-
----
-
-Lithium the most RAD PHP Framework Facebook Wrapper
-===================================================
+# li3_facebook
 
 This Wrapper is a Lithium PHP Library using the official Facebook PHP SDK.
+Thanks goes out to [tmaiaroto](https://github.com/tmaiaroto) for writing the original.
+This fork builds on his work to provide [Composer](http://getcomposer.org/) support and to remove all `.gitmodules`.
 
-Usage
------
+## Installation
 
-This Library is using the official facebook api as a git submodule!
+> *Note: You will need a Facebook API key/secret.
 
-So : Please don't forget to do a git submodule init!
+Load `li3_facebook` by updating `config/bootstrap/libraries.php`:
 
-You will need a Facebook API-Key and the Lithium Framework.
-Integrate the Library in the bootstrap process of your lovely li3 App:
+```php
+<?php
+
+// ... snip ...
 
 Libraries::add('li3_facebook', array(
-	'appId' => key
-	'secret' => yourSuperSecretKey
+    'appId'  => '',
+    'secret' => '',
 ));
+```
 
-these official Facebook SDK Settings are currently not yet supported.
- - cookie
- - domain
- - fileUpload
+## To-Do
+
+These official Facebook SDK Settings are currently not yet supported:
+
+* cookie
+* domain
+* fileUpload
 
 if you want to enable those Settings, you have to unset the validation:
 
