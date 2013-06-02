@@ -1,9 +1,9 @@
 {
-    "name": "servicerunner/li3_facebook",
+    "name": "tmaiaroto/li3_facebook",
     "type": "lithium-library",
     "description": "Lithium Library for the Facebook API",
     "keywords": ["facebook", "api", "li3", "lithium"],
-    "homepage": "https://github.com/ServiceRunner/li3_facebook",
+    "homepage": "https://github.com/tmaiaroto/li3_facebook",
     "authors": [
         {
             "name": "Tom Maiaroto",
